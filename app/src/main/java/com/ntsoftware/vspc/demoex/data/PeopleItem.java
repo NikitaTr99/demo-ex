@@ -1,14 +1,13 @@
-package com.ntsoftware.vspc.demoex.ui.home;
+package com.ntsoftware.vspc.demoex.data;
 
 import android.database.Cursor;
-
-import com.ntsoftware.vspc.demoex.data.PeopleContract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class PeopleItem {
+    int _id;
     String first_name;
     String last_name;
     String birthday;
@@ -19,11 +18,13 @@ public class PeopleItem {
     public PeopleItem() {
     }
 
-    public PeopleItem(String first_name, String last_name, String birthday, String email, byte[] image) {
+    public PeopleItem(int _id, String first_name, String last_name, String birthday, String email, String detail, byte[] image) {
+        this._id = _id;
         this.first_name = first_name;
         this.last_name = last_name;
         this.birthday = birthday;
         this.email = email;
+        this.detail = detail;
         this.image = image;
     }
 
@@ -75,10 +76,19 @@ public class PeopleItem {
         this.detail = detail;
     }
 
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
+
     @Override
     public String toString() {
         return "PeopleItem{" +
-                "first_name='" + first_name + '\'' +
+                "_id=" + _id +
+                ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", email='" + email + '\'' +
@@ -92,6 +102,11 @@ public class PeopleItem {
 
         public Builder() {
             peopleItem = new PeopleItem();
+        }
+
+        public Builder addId(int i) {
+            peopleItem._id = i;
+            return this;
         }
 
         public Builder addFirstName(String s) {
@@ -164,6 +179,7 @@ public class PeopleItem {
                             .addEmail(cursor.getString(email_index))
                             .addImage(cursor.getBlob(image_index))
                             .addDetail(cursor.getString(detail_index))
+                            .addId(cursor.getInt(id_index))
                             .build();
 
                     peopleItems.add(p);

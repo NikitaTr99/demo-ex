@@ -11,7 +11,7 @@ public class PeopleDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "pp.db";
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
 
     private static final String SQL_CREATE_PEOPLE_TABLE =
             "CREATE TABLE " + PeopleContract.PeopleEntry.TABLE_NAME + " ("
@@ -23,6 +23,19 @@ public class PeopleDbHelper extends SQLiteOpenHelper {
                     + PeopleContract.PeopleEntry.COLUMN_DETAIL + " TEXT, "
                     + PeopleContract.PeopleEntry.COLUMN_IMAGE + " BLOB );";
 
+    String insert_q = "INSERT INTO " + PeopleContract.PeopleEntry.TABLE_NAME
+            + " (" + PeopleContract.PeopleEntry.COLUMN_FIRST_NAME + ", " + PeopleContract.PeopleEntry.COLUMN_LAST_NAME + ", "
+            + PeopleContract.PeopleEntry.COLUMN_BIRTHDAY + ", " + PeopleContract.PeopleEntry.COLUMN_EMAIL + ", " + PeopleContract.PeopleEntry.COLUMN_DETAIL + ") VALUES "
+            + "('Трифонов','Никита','15.09.1999','myemalexample@gmail.com', 'Ну типа разрабочик этой навереное бесполезной проги.'),"
+            + "('Человек 2','Человек 2','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
+            + "('Человек 3','Человек 3','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
+            + "('Человек 4','Человек 4','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
+            + "('Человек 5','Человек 5','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
+            + "('Человек 6','Человек 6','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
+            + "('Человек 7','Человек 7','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
+            + "('Человек 8','Человек 8','10.04.1989','Ntууууу@nt.com', 'Какой то чел.')";
+
+
     public PeopleDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -31,6 +44,7 @@ public class PeopleDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.i(LOG_TAG, "Create database");
         sqLiteDatabase.execSQL(SQL_CREATE_PEOPLE_TABLE);
+        sqLiteDatabase.execSQL(insert_q);
     }
 
     @Override

@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.ntsoftware.vspc.demoex.ui.edit.PeopleEditActivity;
 import com.ntsoftware.vspc.demoex.ui.home.MainFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,8 +33,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.content_container, main_fragment).commit();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     View.OnClickListener fab_onclick = view -> {
-        Intent intent = new Intent(view.getContext(), PeopleEditActivity.class);
-        view.getContext().startActivity(intent);
+        view.getContext().startActivity(PeopleDetailActivity.newIntent(view.getContext()));
     };
 }

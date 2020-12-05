@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ntsoftware.vspc.demoex.R;
 import com.ntsoftware.vspc.demoex.data.PeopleContract.PeopleEntry;
 import com.ntsoftware.vspc.demoex.data.PeopleDbHelper;
+import com.ntsoftware.vspc.demoex.data.PeopleItem;
 
 import java.util.List;
 
@@ -27,26 +28,13 @@ public class MainFragment extends Fragment {
 
     RecyclerView recyclerView;
 
-    String insert_q = "INSERT INTO " + PeopleEntry.TABLE_NAME
-            + " (" + PeopleEntry.COLUMN_FIRST_NAME + ", " + PeopleEntry.COLUMN_LAST_NAME + ", "
-            + PeopleEntry.COLUMN_BIRTHDAY + ", " + PeopleEntry.COLUMN_EMAIL + ", " + PeopleEntry.COLUMN_DETAIL + ") VALUES "
-            + "('Человек 2','Человек 2','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
-            + "('Человек 3','Человек 3','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
-            + "('Человек 4','Человек 4','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
-            + "('Человек 5','Человек 5','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
-            + "('Человек 6','Человек 6','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
-            + "('Человек 7','Человек 7','10.04.1989','Ntууууу@nt.com', 'Какой то чел.'),"
-            + "('Человек 8','Человек 8','10.04.1989','Ntууууу@nt.com', 'Какой то чел.')";
 
     @Override
     public void onStart() {
         super.onStart();
         peopleDbHelper = new PeopleDbHelper(root.getContext());
-//        peopleDbHelper.getWritableDatabase().execSQL(insert_q);
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
         recyclerView.setAdapter(new PeopleAdapter(getPeoples()));
-
-//        peopleDbHelper.getWritableDatabase().execSQL(insert_q);
     }
 
     @Nullable

@@ -1,7 +1,6 @@
 package com.ntsoftware.vspc.demoex.ui.home;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ntsoftware.vspc.demoex.PeopleDetailActivity;
 import com.ntsoftware.vspc.demoex.R;
-import com.ntsoftware.vspc.demoex.ui.edit.PeopleEditActivity;
+import com.ntsoftware.vspc.demoex.data.PeopleItem;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.HomeHolder
     View.OnClickListener item_onclick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(view.getContext(), PeopleEditActivity.class);
-            view.getContext().startActivity(intent);
+            PeopleItem pi = (PeopleItem) view.getTag();
+            view.getContext().startActivity(PeopleDetailActivity.newIntent(view.getContext(), pi.get_id()));
         }
     };
 
@@ -50,9 +50,10 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.HomeHolder
         PeopleItem peopleItem = people_items.get(position);
         holder.bind(peopleItem.getFirst_name(),
                 peopleItem.getLast_name(),
-                peopleItem.birthday,
+                peopleItem.getBirthday(),
                 null);
-        holder.root.setOnClickListener(item_onclick);
+        holder.itemView.setOnClickListener(item_onclick);
+        holder.itemView.setTag(people_items.get(position));
     }
 
     @Override
