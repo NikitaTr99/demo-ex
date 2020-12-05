@@ -37,12 +37,22 @@ public class PeopleDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         if (intent.getBooleanExtra(ARG_IS_NEW_ITEM, true)) {
+            if (savedInstanceState == null) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(DetailFragment.ARG_ID, getIntent().getIntExtra(ARG_ID, -1));
+                bundle.putBoolean(DetailFragment.ARG_IS_NEW_ITEM, true);
 
+                Fragment detail_fragment = new DetailFragment();
 
+                detail_fragment.setArguments(bundle);
+
+                getSupportFragmentManager().beginTransaction().add(R.id.detail_container, detail_fragment).commit();
+            }
         } else {
             if (savedInstanceState == null) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(DetailFragment.ARG_ID, getIntent().getIntExtra(ARG_ID, -1));
+                bundle.putBoolean(DetailFragment.ARG_IS_NEW_ITEM, false);
 
                 Fragment detail_fragment = new DetailFragment();
 
