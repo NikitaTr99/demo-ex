@@ -50,13 +50,6 @@ public class DetailFragment extends Fragment {
 
     CardView image_frame;
 
-
-    String insert_q = "INSERT INTO " + PeopleContract.PeopleEntry.TABLE_NAME
-            + " (" + PeopleContract.PeopleEntry.COLUMN_FIRST_NAME + ", " + PeopleContract.PeopleEntry.COLUMN_LAST_NAME + ", "
-            + PeopleContract.PeopleEntry.COLUMN_BIRTHDAY + ", " + PeopleContract.PeopleEntry.COLUMN_EMAIL + ", " + PeopleContract.PeopleEntry.COLUMN_DETAIL + ") VALUES "
-            + "('Test','Test','15.09.1999','myemalexample@gmail.com', 'Test.')";
-
-
     @Override
     public void onStart() {
         peopleDbHelper = new PeopleDbHelper(root.getContext());
@@ -91,12 +84,12 @@ public class DetailFragment extends Fragment {
             };
 
             Cursor cursor = db.query(
-                    PeopleContract.PeopleEntry.TABLE_NAME,             // таблица
-                    projection,                         // столбцы
-                    PeopleContract.PeopleEntry._ID + " = " + getArguments().getInt(ARG_ID),                      // столбцы для условия WHERE
-                    null,                  // значения для условия WHERE
-                    null,                      // Don't group the rows
-                    null,                       // Don't filter by row groups
+                    PeopleContract.PeopleEntry.TABLE_NAME,                                           // таблица
+                    projection,                                                                      // столбцы
+                    PeopleContract.PeopleEntry._ID + " = " + getArguments().getInt(ARG_ID), // столбцы для условия WHERE
+                    null,                                                                // значения для условия WHERE
+                    null,                                                                    // Don't group the rows
+                    null,                                                                     // Don't filter by row groups
                     null);
 
             List<PeopleItem> peopleItems = new PeopleItem.PeopleItemAdapter(cursor).adaptCursorToList();
@@ -153,7 +146,8 @@ public class DetailFragment extends Fragment {
         @Override
         public void onClick(View view) {
             Snackbar.make(view, "TODO", Snackbar.LENGTH_SHORT)
-                    .setAction("OK", null)
+                    .setAction("OK", (view1 -> {
+                    }))
                     .setAnchorView(R.id.constraintLayout)
                     .show();
         }

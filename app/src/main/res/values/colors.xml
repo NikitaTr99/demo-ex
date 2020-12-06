@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="Accent">#FFD740</color>
-    <color name="AccentDark">#9E9D24</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primary_dark">#03406A</color>
+    <color name="primary">#0A64A4</color>
+    <color name="secondary">#FF9000</color>
+    <color name="secondary_variant">#FFC273</color>
+
 </resources>
