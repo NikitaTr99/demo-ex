@@ -17,10 +17,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/b_share"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:background="@android:color/transparent"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             app:iconTint="?attr/colorOnSurface"
             app:iconPadding="0dp"
             app:iconGravity="textStart"
@@ -32,10 +29,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/b_delete"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:background="@android:color/transparent"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             app:iconTint="?attr/colorOnSurface"
             app:iconPadding="0dp"
             app:iconGravity="textStart"
@@ -51,8 +45,8 @@
             android:visibility="gone"
             android:clickable="true"
             android:focusable="true"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:text="Save"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="@string/save"
             app:iconTint="?attr/colorOnSurface"
             android:layout_marginHorizontal="16dp"
             android:layout_weight="1"

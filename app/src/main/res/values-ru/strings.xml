@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detail">Описание</string>
+    <string name="email">Эл. почта</string>
+    <string name="birthday">Дата рождения</string>
+    <string name="last_name">Фамилия</string>
+    <string name="first_name">Имя</string>
+    <string name="save">Сохранить</string>
+    <string name="toast_saved">Сохранено</string>
+    <string name="toast_deleted">Удалено</string>
+</resources>

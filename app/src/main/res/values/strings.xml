@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">DemoEx</string>
+    <string name="app_name" translatable="false">DemoEx</string>
+    <string name="detail">Detail</string>
+    <string name="email">Email</string>
+    <string name="birthday">Birthday</string>
+    <string name="last_name">Last name</string>
+    <string name="first_name">First name</string>
+    <string name="save">Save</string>
+    <string name="toast_saved">Saved</string>
+    <string name="toast_deleted">Deleted</string>
 </resources>

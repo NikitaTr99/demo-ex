@@ -1,8 +1,10 @@
 package com.ntsoftware.vspc.demoex.ui.detail;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,9 +19,9 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.ntsoftware.vspc.demoex.R;
 import com.ntsoftware.vspc.demoex.data.PeopleContract;
 import com.ntsoftware.vspc.demoex.data.PeopleDbHelper;
@@ -37,11 +39,15 @@ public class DetailFragment extends Fragment {
 
     PeopleDbHelper peopleDbHelper;
 
+    PeopleItem peopleItem;
+
     TextInputEditText first_name;
     TextInputEditText last_name;
     TextInputEditText birthday;
     TextInputEditText email;
     TextInputEditText detail;
+
+    TextInputLayout tv_detail_email_layout;
 
     Button delete;
     Button share;
@@ -52,13 +58,11 @@ public class DetailFragment extends Fragment {
     @Override
     public void onStart() {
 
-
-
         super.onStart();
 
         if (getArguments().getBoolean(ARG_IS_NEW_ITEM, true)) {
-            setChangeListeners();
 
+            toggleActionButton();
 
         } else {
 
@@ -85,27 +89,34 @@ public class DetailFragment extends Fragment {
             List<PeopleItem> peopleItems = new PeopleItem.PeopleItemAdapter(cursor).adaptCursorToList();
             PeopleItem p = peopleItems.get(0);
 
+            peopleItem = p;
+
             first_name.setText(p.getFirst_name());
             last_name.setText(p.getLast_name());
             birthday.setText(p.getBirthday());
             email.setText(p.getEmail());
             detail.setText(p.getDetail());
-
-            setChangeListeners();
         }
+        setChangeListeners();
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        removeChangeListeners();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_detail, container, false);
-        AppBarLayout appBarLayout = root.findViewById(R.id.app_bar);
         first_name = root.findViewById(R.id.tv_detail_f_name);
         last_name = root.findViewById(R.id.tv_detail_l_name);
         birthday = root.findViewById(R.id.tv_detail_birthday);
         email = root.findViewById(R.id.tv_detail_email);
         detail = root.findViewById(R.id.tv_detail_detail);
+        tv_detail_email_layout = root.findViewById(R.id.tv_detail_email_layout);
 
         image_frame = root.findViewById(R.id.image_frame);
 
@@ -115,15 +126,10 @@ public class DetailFragment extends Fragment {
 
         peopleDbHelper = new PeopleDbHelper(root.getContext());
 
-        if (getArguments().getBoolean(ARG_IS_NEW_ITEM, true)) {
-            delete.setVisibility(View.GONE);
-            share.setVisibility(View.GONE);
-            save.setVisibility(View.VISIBLE);
-        }
-
         delete.setOnClickListener(delete_onclick);
-        share.setOnClickListener(test_onclick);
+        share.setOnClickListener(share_onclick);
         save.setOnClickListener(save_onclick);
+        tv_detail_email_layout.setEndIconOnClickListener(send_email_onclick);
         image_frame.setOnClickListener(test_onclick);
 
 
@@ -141,6 +147,34 @@ public class DetailFragment extends Fragment {
         }
     };
 
+    View.OnClickListener send_email_onclick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
+            emailSelectorIntent.setData(Uri.parse("mailto:"));
+
+            final Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{peopleItem.getEmail()});
+            emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            emailIntent.setSelector(emailSelectorIntent);
+
+            if (emailIntent.resolveActivity(getActivity().getPackageManager()) != null)
+                startActivity(emailIntent);
+
+        }
+    };
+
+    View.OnClickListener share_onclick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            final Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, peopleItem.toString());
+            intent.setType("text/plain");
+            startActivity(intent);
+        }
+    };
+
     View.OnClickListener delete_onclick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -150,7 +184,7 @@ public class DetailFragment extends Fragment {
                     new String[]{String.valueOf(getArguments().getInt(ARG_ID))});
             db.close();
 
-            Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_SHORT)
+            Toast.makeText(view.getContext(), R.string.toast_deleted, Toast.LENGTH_SHORT)
                     .show();
 
             Objects.requireNonNull(getActivity()).onBackPressed();
@@ -180,7 +214,7 @@ public class DetailFragment extends Fragment {
                         new String[]{String.valueOf(getArguments().getInt(ARG_ID))});
             }
 
-            Toast.makeText(view.getContext(), "Saved", Toast.LENGTH_SHORT)
+            Toast.makeText(view.getContext(), R.string.toast_saved, Toast.LENGTH_SHORT)
                     .show();
 
             db.close();
@@ -203,9 +237,7 @@ public class DetailFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            delete.setVisibility(View.GONE);
-            share.setVisibility(View.GONE);
-            save.setVisibility(View.VISIBLE);
+            toggleActionButton(true);
         }
     };
 
@@ -215,6 +247,32 @@ public class DetailFragment extends Fragment {
         birthday.addTextChangedListener(data_changed_listener);
         email.addTextChangedListener(data_changed_listener);
         detail.addTextChangedListener(data_changed_listener);
+    }
+
+    private void removeChangeListeners() {
+        first_name.removeTextChangedListener(data_changed_listener);
+        last_name.removeTextChangedListener(data_changed_listener);
+        birthday.removeTextChangedListener(data_changed_listener);
+        email.removeTextChangedListener(data_changed_listener);
+        detail.removeTextChangedListener(data_changed_listener);
+    }
+
+    private void toggleActionButton() {
+        toggleActionButton(false);
+    }
+
+    private void toggleActionButton(boolean stay_hide) {
+        if (save.getVisibility() != View.VISIBLE) {
+            delete.setVisibility(View.GONE);
+            share.setVisibility(View.GONE);
+            save.setVisibility(View.VISIBLE);
+        } else if (stay_hide) {
+
+        } else {
+            delete.setVisibility(View.VISIBLE);
+            share.setVisibility(View.VISIBLE);
+            save.setVisibility(View.GONE);
+        }
     }
 
     private String getTextFromView(TextInputEditText textInputEditText) {
