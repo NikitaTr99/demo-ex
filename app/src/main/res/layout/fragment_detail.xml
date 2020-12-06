@@ -46,19 +46,18 @@
             android:layout_height="match_parent" />
 
 
-        <!--        <com.google.android.material.button.MaterialButton-->
-        <!--            android:clickable="true"-->
-        <!--            android:focusable="true"-->
-        <!--            android:foreground="?android:attr/selectableItemBackground"-->
-        <!--            android:background="@android:color/transparent"-->
-        <!--            app:iconTint="?attr/colorOnSurface"-->
-        <!--            app:iconPadding="0dp"-->
-        <!--            app:iconGravity="textStart"-->
-        <!--            app:icon="@drawable/ic_baseline_edit_24"-->
-        <!--            android:layout_marginHorizontal="16dp"-->
-        <!--            android:layout_weight="1"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"/>-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/b_save"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="Save"
+            app:iconTint="?attr/colorOnSurface"
+            android:layout_marginHorizontal="16dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
     </LinearLayout>

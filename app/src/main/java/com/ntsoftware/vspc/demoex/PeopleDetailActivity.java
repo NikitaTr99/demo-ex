@@ -63,6 +63,7 @@ public class PeopleDetailActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();

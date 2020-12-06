@@ -3,14 +3,18 @@ package com.ntsoftware.vspc.demoex.ui.detail;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -28,6 +32,8 @@ public class DetailFragment extends Fragment {
     public static final String ARG_ID = "id";
     public static final String ARG_IS_NEW_ITEM = "is_new";
 
+    private boolean is_edit = false;
+
     View root;
 
     PeopleDbHelper peopleDbHelper;
@@ -38,15 +44,39 @@ public class DetailFragment extends Fragment {
     TextView email;
     TextView detail;
 
+    Button delete;
+    Button share;
+    Button save;
+
+    CardView image_frame;
+
+
+    String insert_q = "INSERT INTO " + PeopleContract.PeopleEntry.TABLE_NAME
+            + " (" + PeopleContract.PeopleEntry.COLUMN_FIRST_NAME + ", " + PeopleContract.PeopleEntry.COLUMN_LAST_NAME + ", "
+            + PeopleContract.PeopleEntry.COLUMN_BIRTHDAY + ", " + PeopleContract.PeopleEntry.COLUMN_EMAIL + ", " + PeopleContract.PeopleEntry.COLUMN_DETAIL + ") VALUES "
+            + "('Test','Test','15.09.1999','myemalexample@gmail.com', 'Test.')";
+
 
     @Override
     public void onStart() {
+        peopleDbHelper = new PeopleDbHelper(root.getContext());
+
+
         super.onStart();
 
         if (getArguments().getBoolean(ARG_IS_NEW_ITEM, true)) {
+            is_edit = true;
+
+            first_name.addTextChangedListener(data_changed_listener);
+            last_name.addTextChangedListener(data_changed_listener);
+            birthday.addTextChangedListener(data_changed_listener);
+            email.addTextChangedListener(data_changed_listener);
+            detail.addTextChangedListener(data_changed_listener);
+
 
         } else {
-            peopleDbHelper = new PeopleDbHelper(root.getContext());
+
+            is_edit = false;
 
             SQLiteDatabase db = peopleDbHelper.getReadableDatabase();
 
@@ -78,6 +108,11 @@ public class DetailFragment extends Fragment {
             email.setText(p.getEmail());
             detail.setText(p.getDetail());
 
+            first_name.addTextChangedListener(data_changed_listener);
+            last_name.addTextChangedListener(data_changed_listener);
+            birthday.addTextChangedListener(data_changed_listener);
+            email.addTextChangedListener(data_changed_listener);
+            detail.addTextChangedListener(data_changed_listener);
         }
 
     }
@@ -93,11 +128,23 @@ public class DetailFragment extends Fragment {
         email = root.findViewById(R.id.tv_detail_email);
         detail = root.findViewById(R.id.tv_detail_detail);
 
-        Button delete = root.findViewById(R.id.b_delete);
-        Button share = root.findViewById(R.id.b_share);
+        image_frame = root.findViewById(R.id.image_frame);
+
+        delete = root.findViewById(R.id.b_delete);
+        share = root.findViewById(R.id.b_share);
+        save = root.findViewById(R.id.b_save);
+
+        if (getArguments().getBoolean(ARG_IS_NEW_ITEM, true)) {
+            delete.setVisibility(View.GONE);
+            share.setVisibility(View.GONE);
+            save.setVisibility(View.VISIBLE);
+        }
 
         delete.setOnClickListener(test_onclick);
         share.setOnClickListener(test_onclick);
+        save.setOnClickListener(test_save_onclick);
+        image_frame.setOnClickListener(test_onclick);
+
 
         return root;
     }
@@ -109,7 +156,38 @@ public class DetailFragment extends Fragment {
                     .setAction("OK", null)
                     .setAnchorView(R.id.constraintLayout)
                     .show();
+        }
+    };
 
+    View.OnClickListener test_save_onclick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(view.getContext(), "Saved", Toast.LENGTH_SHORT)
+                    .show();
+
+            getActivity().onBackPressed();
+        }
+    };
+
+
+    TextWatcher data_changed_listener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            delete.setVisibility(View.GONE);
+            share.setVisibility(View.GONE);
+            save.setVisibility(View.VISIBLE);
+
+            is_edit = true;
         }
     };
 
