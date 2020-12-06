@@ -11,7 +11,7 @@ public class PeopleDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "pp.db";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String SQL_CREATE_PEOPLE_TABLE =
             "CREATE TABLE " + PeopleContract.PeopleEntry.TABLE_NAME + " ("
@@ -44,7 +44,7 @@ public class PeopleDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.i(LOG_TAG, "Create database");
         sqLiteDatabase.execSQL(SQL_CREATE_PEOPLE_TABLE);
-        sqLiteDatabase.execSQL(insert_q);
+//        sqLiteDatabase.execSQL(insert_q);
     }
 
     @Override
