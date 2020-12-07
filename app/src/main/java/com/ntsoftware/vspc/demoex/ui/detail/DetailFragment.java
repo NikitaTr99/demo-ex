@@ -144,13 +144,13 @@ public class DetailFragment extends Fragment {
         share.setOnClickListener(share_onclick);
         save.setOnClickListener(save_onclick);
         tv_detail_email_layout.setEndIconOnClickListener(send_email_onclick);
-        image_frame.setOnClickListener(test_onclick);
+        image_frame.setOnClickListener(image_onclick);
 
 
         return root;
     }
 
-    View.OnClickListener test_onclick = new View.OnClickListener() {
+    View.OnClickListener image_onclick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -181,7 +181,7 @@ public class DetailFragment extends Fragment {
         @Override
         public void onClick(View view) {
             final Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, peopleItem.toString());
+            intent.putExtra(Intent.EXTRA_TEXT, peopleItem.toText());
             intent.setType("text/plain");
             startActivity(intent);
         }

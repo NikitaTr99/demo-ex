@@ -97,6 +97,10 @@ public class PeopleItem {
                 '}';
     }
 
+    public String toText() {
+        return first_name + " " + last_name + ", " + birthday + ", " + email + ".";
+    }
+
     public static class Builder {
         private PeopleItem peopleItem;
 
