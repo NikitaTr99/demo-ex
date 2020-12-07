@@ -1,9 +1,13 @@
 package com.ntsoftware.vspc.demoex.ui.detail;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,7 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.ntsoftware.vspc.demoex.R;
@@ -27,6 +31,10 @@ import com.ntsoftware.vspc.demoex.data.PeopleContract;
 import com.ntsoftware.vspc.demoex.data.PeopleDbHelper;
 import com.ntsoftware.vspc.demoex.data.PeopleItem;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +42,8 @@ public class DetailFragment extends Fragment {
 
     public static final String ARG_ID = "id";
     public static final String ARG_IS_NEW_ITEM = "is_new";
+
+    private boolean image_changed = false;
 
     View root;
 
@@ -54,6 +64,7 @@ public class DetailFragment extends Fragment {
     Button save;
 
     CardView image_frame;
+    ImageView imageView;
 
     @Override
     public void onStart() {
@@ -96,6 +107,8 @@ public class DetailFragment extends Fragment {
             birthday.setText(p.getBirthday());
             email.setText(p.getEmail());
             detail.setText(p.getDetail());
+            if (p.getImage() != null && !image_changed)
+                setImageByBytes(p.getImage());
         }
         setChangeListeners();
 
@@ -119,6 +132,7 @@ public class DetailFragment extends Fragment {
         tv_detail_email_layout = root.findViewById(R.id.tv_detail_email_layout);
 
         image_frame = root.findViewById(R.id.image_frame);
+        imageView = root.findViewById(R.id.detail_image);
 
         delete = root.findViewById(R.id.b_delete);
         share = root.findViewById(R.id.b_share);
@@ -139,11 +153,9 @@ public class DetailFragment extends Fragment {
     View.OnClickListener test_onclick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Snackbar.make(view, "TODO", Snackbar.LENGTH_SHORT)
-                    .setAction("OK", (view1 -> {
-                    }))
-                    .setAnchorView(R.id.constraintLayout)
-                    .show();
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, 10);
         }
     };
 
@@ -197,6 +209,13 @@ public class DetailFragment extends Fragment {
             ContentValues contentValues = new ContentValues();
             SQLiteDatabase db = peopleDbHelper.getWritableDatabase();
 
+            if (imageView.getDrawable() != null) {
+                Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] bytes = stream.toByteArray();
+                contentValues.put(PeopleContract.PeopleEntry.COLUMN_IMAGE, bytes);
+            }
 
             contentValues.put(PeopleContract.PeopleEntry.COLUMN_FIRST_NAME, getTextFromView(first_name));
             contentValues.put(PeopleContract.PeopleEntry.COLUMN_LAST_NAME, getTextFromView(last_name));
@@ -277,6 +296,48 @@ public class DetailFragment extends Fragment {
 
     private String getTextFromView(TextInputEditText textInputEditText) {
         return textInputEditText.getText().toString();
+    }
+
+    public void setImageByBytes(byte[] b) {
+        Bitmap image = BitmapFactory.decodeByteArray(b, 0, b.length);
+        imageView.setImageBitmap(image);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 10) {
+                try {
+                    InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                    byte[] b = toByteArray(inputStream);
+                    image_changed = true;
+                    setImageByBytes(b);
+                    toggleActionButton();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    public static byte[] toByteArray(InputStream in) throws IOException {
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int len;
+
+        // read bytes from the input stream and store them in buffer
+        while ((len = in.read(buffer)) != -1) {
+            // write bytes from the buffer into output stream
+            os.write(buffer, 0, len);
+        }
+
+        return os.toByteArray();
     }
 
 }

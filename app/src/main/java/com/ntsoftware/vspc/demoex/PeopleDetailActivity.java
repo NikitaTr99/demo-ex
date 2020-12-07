@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.ntsoftware.vspc.demoex.data.PeopleDbHelper;
 import com.ntsoftware.vspc.demoex.ui.detail.DetailFragment;
 
 public class PeopleDetailActivity extends AppCompatActivity {
@@ -14,6 +15,10 @@ public class PeopleDetailActivity extends AppCompatActivity {
     private static final String ARG_IS_NEW_ITEM = "is_new";
 
     private static final String ARG_ID = "id";
+
+    Fragment detail_fragment;
+
+    PeopleDbHelper peopleDbHelper;
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, PeopleDetailActivity.class);
@@ -32,6 +37,8 @@ public class PeopleDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_edit);
+
+        peopleDbHelper = new PeopleDbHelper(this);
 
 
         Intent intent = getIntent();
@@ -54,7 +61,8 @@ public class PeopleDetailActivity extends AppCompatActivity {
                 bundle.putInt(DetailFragment.ARG_ID, getIntent().getIntExtra(ARG_ID, -1));
                 bundle.putBoolean(DetailFragment.ARG_IS_NEW_ITEM, false);
 
-                Fragment detail_fragment = new DetailFragment();
+
+                detail_fragment = new DetailFragment();
 
                 detail_fragment.setArguments(bundle);
 

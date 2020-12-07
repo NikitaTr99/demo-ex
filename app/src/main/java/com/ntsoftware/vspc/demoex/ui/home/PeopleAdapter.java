@@ -1,6 +1,8 @@
 package com.ntsoftware.vspc.demoex.ui.home;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.HomeHolder
         holder.bind(peopleItem.getFirst_name(),
                 peopleItem.getLast_name(),
                 peopleItem.getBirthday(),
-                null);
+                peopleItem.getImage());
         holder.itemView.setOnClickListener(item_onclick);
         holder.itemView.setTag(people_items.get(position));
     }
@@ -82,6 +84,12 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.HomeHolder
             first_name.setText(f_n);
             last_name.setText(l_n);
             birthday.setText(birth);
+            setImageByBytes(im);
+        }
+
+        public void setImageByBytes(byte[] b) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+            image.setImageBitmap(bitmap);
         }
     }
 }
